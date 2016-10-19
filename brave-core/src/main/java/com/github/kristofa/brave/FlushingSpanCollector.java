@@ -1,7 +1,5 @@
 package com.github.kristofa.brave;
 
-import com.github.kristofa.brave.internal.Nullable;
-import com.twitter.zipkin.gen.Span;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
@@ -12,6 +10,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+
+import com.github.kristofa.brave.internal.Nullable;
+import com.twitter.zipkin.gen.Span;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -70,7 +72,13 @@ public abstract class FlushingSpanCollector implements SpanCollector, Flushable,
   /** Calls flush on a fixed interval */
   static final class Flusher implements Runnable {
     final Flushable flushable;
-    final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+      public Thread newThread(Runnable r) {
+        Thread t = Executors.defaultThreadFactory().newThread(r);
+        t.setDaemon(true);
+        return t;
+      }
+    });
 
     Flusher(Flushable flushable, int flushInterval) {
       this.flushable = flushable;
