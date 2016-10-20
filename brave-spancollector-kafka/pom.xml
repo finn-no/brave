@@ -2,7 +2,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.zipkin.brave</groupId>
+        <groupId>no.finntech</groupId>
         <artifactId>brave</artifactId>
         <version>3.9.1</version>
     </parent>
@@ -36,7 +36,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.zipkin.brave</groupId>
+            <groupId>no.finntech</groupId>
             <artifactId>brave-core</artifactId>
             <version>3.9.1</version>
         </dependency>
